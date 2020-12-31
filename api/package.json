@@ -1,0 +1,19 @@
+{
+  "name": "roster-api",
+  "version": "0.0.1",
+  "description": "API endpoint for information about shows, people, sponsors, and schedules.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wlabarron/roster.git"
+  },
+  "author": "Andrew Barron",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/wlabarron/roster/issues"
+  },
+  "homepage": "https://github.com/wlabarron/roster#readme"
+}
