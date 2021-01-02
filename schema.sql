@@ -1,6 +1,6 @@
 create table images
 (
-    id  int auto_increment
+    id  bigint unsigned default(uuid_short())
         primary key,
     url text not null,
     alt text not null
@@ -8,13 +8,14 @@ create table images
 
 create table people
 (
-    id           int auto_increment
+    id           bigint unsigned default(uuid_short())
         primary key,
+    nick         text not null,
     name         text not null,
     description  text null,
     email        text null,
-    profileImage int  null,
-    coverImage   int  null,
+    profileImage bigint unsigned  null,
+    coverImage   bigint unsigned null,
     constraint people_coverImage
         foreign key (coverImage) references images (id),
     constraint people_profileImage
@@ -23,14 +24,15 @@ create table people
 
 create table shows
 (
-    id           int auto_increment
+    id           bigint unsigned default(uuid_short())
         primary key,
+    nick         text not null,
     name         text not null,
     tagline      text null,
     description  text null,
     email        text null,
-    profileImage int  null,
-    coverImage   int  null,
+    profileImage bigint unsigned null,
+    coverImage   bigint unsigned null,
     constraint shows_coverImage
         foreign key (coverImage) references images (id),
     constraint shows_profileImage
@@ -39,10 +41,10 @@ create table shows
 
 create table rel_shows_people
 (
-    id     int auto_increment
+    id     bigint unsigned default(uuid_short())
         primary key,
-    `show` int  not null,
-    person int  not null,
+    `show` bigint unsigned not null,
+    person bigint unsigned not null,
     role   text null,
     constraint rel_shows_people_person
         foreign key (person) references people (id),
@@ -52,13 +54,14 @@ create table rel_shows_people
 
 create table sponsors
 (
-    id           int auto_increment
+    id           bigint unsigned default(uuid_short())
         primary key,
+    nick         text not null,
     name         text not null,
     description  text not null,
     email        text null,
-    profileImage int  null,
-    coverImage   int  null,
+    profileImage bigint unsigned null,
+    coverImage   bigint unsigned null,
     constraint sponsors_coverImage
         foreign key (coverImage) references images (id),
     constraint sponsors_profileImage
@@ -67,10 +70,10 @@ create table sponsors
 
 create table rel_shows_sponsors
 (
-    id      int auto_increment
+    id      bigint unsigned default(uuid_short())
         primary key,
-    `show`  int  not null,
-    sponsor int  not null,
+    `show`  bigint unsigned not null,
+    sponsor bigint unsigned not null,
     detail  text null,
     constraint rel_shows_sponsors_show
         foreign key (`show`) references shows (id),
@@ -80,9 +83,9 @@ create table rel_shows_sponsors
 
 create table times
 (
-    id         int auto_increment
+    id         bigint unsigned default(uuid_short())
         primary key,
-    `show`     int                  not null,
+    `show`     bigint unsigned      not null,
     new        tinyint(1) default 1 not null,
     datetime   text                 not null,
     exceptions text                 null,
@@ -94,7 +97,7 @@ create table times
 
 create table urls
 (
-    id   int auto_increment
+    id   bigint unsigned default(uuid_short())
         primary key,
     name text not null,
     url  text not null
@@ -102,12 +105,12 @@ create table urls
 
 create table rel_urls
 (
-    id      int auto_increment
+    id      bigint unsigned default(uuid_short())
         primary key,
-    url     int not null,
-    `show`  int null,
-    sponsor int null,
-    people  int null,
+    url     bigint unsigned not null,
+    `show`  bigint unsigned null,
+    sponsor bigint unsigned null,
+    people  bigint unsigned null,
     constraint rel_urls_people
         foreign key (people) references people (id),
     constraint rel_urls_shows
