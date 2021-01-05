@@ -4,7 +4,7 @@
   "description": "API endpoint for information about shows, people, sponsors, and schedules.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/wlabarron/roster/issues"
   },
-  "homepage": "https://github.com/wlabarron/roster#readme"
+  "homepage": "https://github.com/wlabarron/roster#readme",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
 }
