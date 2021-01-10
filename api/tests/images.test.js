@@ -8,15 +8,7 @@ const db = require("../src/dbmanager");
  */
 beforeAll(() => {
     // Create a database connection, then start the web server parts
-    const mysql = require("promise-mysql")
-    return mysql.createConnection({
-        host: process.env.DATABASE_SERVER,
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        supportBigNumbers: true,
-        bigNumberStrings: true,
-    }).then(connection => {
+    return db.connect().then(connection => {
         db.init(connection)
         images.init(db);
     });

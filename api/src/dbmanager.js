@@ -5,7 +5,23 @@
 
 'use strict';
 let connection;
+const mysql = require('promise-mysql');
 require('dotenv').config();
+
+/**
+ * Create a database connection based on environment variables or the .env file.
+ * @returns {<Connection>} The promise of a database connection.
+ */
+function connect() {
+    return mysql.createConnection({
+        host: process.env.DATABASE_SERVER,
+        database: process.env.DATABASE_NAME,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        supportBigNumbers: true,
+        bigNumberStrings: true,
+    })
+}
 
 /**
  * Initialises the manager with a database connection.
@@ -41,5 +57,5 @@ function getBasicData(type, uuid, fields = []) {
     return connection.query("SELECT " + fieldsString + " FROM " + type + " WHERE id = " + uuidString);
 }
 
-module.exports = {init, getBasicData};
+module.exports = {connect, init, getBasicData};
 
