@@ -7,6 +7,10 @@
 let connection;
 require('dotenv').config();
 
+/**
+ * Initialises the manager with a database connection.
+ * @param conn The database connection to use.
+ */
 function init(conn) {
     connection = conn;
 }
@@ -17,7 +21,7 @@ function init(conn) {
  * @param uuid {Array<string>} An array of UUIDs to retrieve information about.
  * @param fields {Array<string>} An array of the field names you wish to retrieve.
  */
-function getBasicData(type, uuid, fields) {
+function getBasicData(type, uuid, fields = []) {
     let fieldsString;
     if (fields.length > 0) {
         // Format fields requested for SQL
