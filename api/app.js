@@ -18,25 +18,31 @@ function start(connection) {
 
     db.init(connection);
 
-    const sponsors = require(__dirname + '/src/sponsors');
+    const sponsors = require('./src/sponsors');
     sponsors.init(db);
+    const people = require('./src/people');
+    people.init(db);
 
-    app.get('/api/sponsors', (req, res) => {
-        // If one ID is requested, put it into an array of its own
-        if (typeof req.query["id"] === "string") {
-            req.query["id"] = [req.query["id"]];
+    app.get('/api/:type', (req, res) => {
+        if (req.query["id"]) {
+            // If one ID is requested, put it into an array of its own
+            if (typeof req.query["id"] === "string") {
+                req.query["id"] = [req.query["id"]];
+            }
+
+            switch (req.params["type"]) {
+                case "sponsors":
+                    sponsors.get(req.query["id"]).then(data => sendJson(data, res))
+                    break;
+                case "people":
+                    people.get(req.query["id"]).then(data => sendJson(data, res))
+                    break;
+            }
+
+        } else {
+            res.status(400);
+            res.end()
         }
-
-        sponsors.get(req.query["id"])
-            .then(data => {
-                if (data !== null) {
-                    res.json(data);
-                } else {
-                    res.status(400);
-                }
-
-                res.end();
-            })
     });
 
     // Start server on port in env variables, default to port 3000 if not set
@@ -44,6 +50,20 @@ function start(connection) {
     app.listen(port, () => {
         console.log("API server listening on port " + port + ".");
     });
+}
+
+/**
+ * Sends the specified object as JSON, or status 400 if the object is null.
+ * @param object The object to convert to JSON and send.
+ * @param res The response object to send over.
+ */
+function sendJson(object, res) {
+    if (object !== null) {
+        res.json(object);
+    } else {
+        res.status(400);
+    }
+    res.end();
 }
 
 // Create a database connection, then start the web server parts
