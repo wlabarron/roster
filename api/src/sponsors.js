@@ -24,20 +24,20 @@ function init(dbConnection) {
 
 /**
  * Get details about a sponsor.
- * @param {Array<string>} uuids Array of UUIDs of sponsor you want information about.
+ * @param {Array<string>} ids Array of IDs of sponsor you want information about.
  * @returns {PromiseLike<{}> | Promise<{}>} A promise of the information.
  */
-function get(uuids) {
-    // If any UUIDs are invalid, return null
-    for (const uuid of uuids) {
-        if (!common.validateUUID(uuid)) {
+function get(ids) {
+    // If any IDs are invalid, return null
+    for (const id of ids) {
+        if (!common.validateID(id)) {
             return new Promise(resolve => {
                 resolve(null);
             });
         }
     }
 
-    return db.getBasicData("sponsors", uuids).then(rows => {
+    return db.getBasicData("sponsors", ids).then(rows => {
         const data = {};
         const rowPromises = [];
 

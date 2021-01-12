@@ -22,12 +22,12 @@ function start(connection) {
     sponsors.init(db);
 
     app.get('/api/sponsors', (req, res) => {
-        // If one UUID is requested, put it into an array of its own
-        if (typeof req.query["uuid"] === "string") {
-            req.query["uuid"] = [req.query["uuid"]];
+        // If one ID is requested, put it into an array of its own
+        if (typeof req.query["id"] === "string") {
+            req.query["id"] = [req.query["id"]];
         }
 
-        sponsors.get(req.query["uuid"])
+        sponsors.get(req.query["id"])
             .then(data => {
                 if (data !== null) {
                     res.json(data);

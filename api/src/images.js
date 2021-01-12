@@ -19,12 +19,12 @@ function init(dbConnection) {
 }
 
 /**
- * Get details of an image based on its UUID.
- * @param {string} uuid The UUID of the image to retrieve.
+ * Get details of an image based on its ID.
+ * @param {string} id The ID of the image to retrieve.
  */
-function get(uuid) {
-    if (common.validateUUID(uuid)) {
-        return db.getBasicData("images", [uuid]).then(rows => {
+function get(id) {
+    if (common.validateID(id)) {
+        return db.getBasicData("images", [id]).then(rows => {
             if (rows.length === 1) {
                 return {
                     "url": rows[0].url,

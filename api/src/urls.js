@@ -21,16 +21,16 @@ function init(dbConnection) {
 /**
  * Get details of URLs related to another entity.
  * @param {string} relatedType The type of the entity.
- * @param {string} relatedUUID The UUID of the entity whose related URLs you wish to retrieve.
+ * @param {string} relatedID The ID of the entity whose related URLs you wish to retrieve.
  */
 const validRelatedTypes = ["show", "people", "sponsor"]
 
-function get(relatedType, relatedUUID) {
+function get(relatedType, relatedID) {
     relatedType = relatedType.toLowerCase().trim();
 
-    if (common.validateUUID(relatedUUID) &&
+    if (common.validateID(relatedID) &&
         validRelatedTypes.includes(relatedType)) {
-        return db.query("SELECT DISTINCT urls.* FROM urls, rel_urls LEFT JOIN urls u on rel_urls.url = u.id WHERE rel_urls." + relatedType + " = " + relatedUUID + ";")
+        return db.query("SELECT DISTINCT urls.* FROM urls, rel_urls LEFT JOIN urls u on rel_urls.url = u.id WHERE rel_urls." + relatedType + " = " + relatedID + ";")
             .then(rows => {
                 // no related images
                 if (rows.length === 0) {

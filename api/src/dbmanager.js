@@ -35,15 +35,15 @@ function init(conn) {
 /**
  * Get basic data from about an entity from the database.
  * @param type {string} The type of entity to get information about - "sponsors", "people", "shows"
- * @param uuid {Array<string>} An array of UUIDs to retrieve information about.
+ * @param id {Array<string>} An array of IDs to retrieve information about.
  */
-function getBasicData(type, uuid) {
-    // Format multiple UUIDs for SQL
-    let uuidString = uuid.reduce((out, next) => {
+function getBasicData(type, id) {
+    // Format multiple IDs for SQL
+    let idString = id.reduce((out, next) => {
         return out + " OR id = " + next;
     })
 
-    return query("SELECT * FROM " + type + " WHERE id = " + uuidString);
+    return query("SELECT * FROM " + type + " WHERE id = " + idString);
 }
 
 function query(sql) {

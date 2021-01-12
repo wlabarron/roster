@@ -13,29 +13,29 @@ beforeAll(() => {
     })
 });
 
-test('Get details about an invalid UUID', () => {
+test('Get details about an invalid ID', () => {
     return sponsors.get(["invalid"]).then(data => {
         expect(data).toBe(null);
     })
 });
 
-test('Get details about a non-existent UUID', () => {
+test('Get details about a non-existent ID', () => {
     return sponsors.get(["01234567891234567"]).then(data => {
         expect(data).toBe(null);
     })
 });
 
-test('Get details about a sponsor using their UUID', () => {
+test('Get details about a sponsor using their ID', () => {
     return sponsors.get(["99066300793356292"]).then(data => {
         expect(Object.keys(data).length).toBe(1);
         expect(data).toStrictEqual({
-                '99066300793356292': {
-                    nick: 'taxi',
-                    name: 'Speedy Taxis',
-                    description: "Get where you're going safely and quickly with Speedy Taxis - mention This Radio Station for 10% off!",
-                    email: 'book@example.com',
-                    profileImage: {
-                        url: 'https://via.placeholder.com/750.png',
+            '99066300793356292': {
+                nick: 'taxi',
+                name: 'Speedy Taxis',
+                description: "Get where you're going safely and quickly with Speedy Taxis - mention This Radio Station for 10% off!",
+                email: 'book@example.com',
+                profileImage: {
+                    url: 'https://via.placeholder.com/750.png',
                         alt: 'Speedy Taxis'
                     },
                     coverImage: null,
@@ -54,3 +54,5 @@ test('Get details about a sponsor using their UUID', () => {
         )
     })
 });
+
+// TODO test retrieving multiple sponsors

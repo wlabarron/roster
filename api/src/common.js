@@ -7,14 +7,14 @@
 'use strict';
 
 /**
- * Checks that the passed UUID is of a valid form (but not that it exists in the given context).
- * @param {string} uuid The UUID to check.
- * @returns {boolean} true if the UUID is formed correctly, otherwise false.
+ * Checks that the passed ID is of a valid form (but not that it exists in the given context).
+ * @param {string} id The ID to check.
+ * @returns {boolean} true if the ID is formed correctly, otherwise false.
  */
-function validateUUID(uuid) {
+function validateID(id) {
     // "all" is valid to return all information
-    // otherwise, check the UUID against the regex for a well-formed UUID
-    return uuid === "all" || /^[0-9]{17}$/.test(uuid);
+    // otherwise, check the ID against the regex for a well-formed ID
+    return id === "all" || /^[0-9]{17}$/.test(id);
 }
 
-module.exports = {validateUUID};
+module.exports = {validateID};

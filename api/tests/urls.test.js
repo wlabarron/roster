@@ -20,13 +20,13 @@ test('Request related URLs using an invalid type', () => {
     });
 })
 
-test('Request related URLs to an invalid UUID', () => {
+test('Request related URLs to an invalid ID', () => {
     return urls.get("sponsor", "argh").then(url => {
         expect(url).toBe(null);
     });
 })
 
-test('Request related URLs to a non-existent UUID', () => {
+test('Request related URLs to a non-existent ID', () => {
     return urls.get("sponsor", "12345678901234567").then(url => {
         expect(url).toBe(null);
     });
@@ -48,4 +48,4 @@ test('Request a URLs related to a sponsor', () => {
 })
 
 // TODO tests for other types
-// TODO tests for valid types and UUID but with no related images
+// TODO tests for valid types and ID but with no related images
