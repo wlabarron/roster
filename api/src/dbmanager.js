@@ -43,7 +43,13 @@ function getBasicData(type, id) {
         return out + " OR id = " + next;
     })
 
-    return query("SELECT * FROM " + type + " WHERE id = " + idString);
+    // Choose the correct query based on whether we have a specific ID or we want to get everything
+    if (idString === "all") {
+        return query("SELECT * FROM " + type);
+    } else {
+        return query("SELECT * FROM " + type + " WHERE id = " + idString);
+    }
+
 }
 
 function query(sql) {
