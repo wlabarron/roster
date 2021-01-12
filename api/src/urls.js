@@ -30,7 +30,7 @@ function get(relatedType, relatedID) {
 
     if (common.validateID(relatedID) &&
         validRelatedTypes.includes(relatedType)) {
-        return db.query("SELECT DISTINCT urls.* FROM urls, rel_urls LEFT JOIN urls u on rel_urls.url = u.id WHERE rel_urls." + relatedType + " = " + relatedID + ";")
+        return db.query("SELECT DISTINCT u.* FROM urls, rel_urls LEFT JOIN urls u on rel_urls.url = u.id WHERE rel_urls." + relatedType + " = " + relatedID + ";")
             .then(rows => {
                 // no related images
                 if (rows.length === 0) {
