@@ -6,6 +6,7 @@
 'use strict';
 let connection;
 const mysql = require('promise-mysql');
+const common = require("./common");
 require('dotenv').config();
 
 /**
@@ -35,27 +36,19 @@ function init(conn) {
  * Get basic data from about an entity from the database.
  * @param type {string} The type of entity to get information about - "sponsors", "people", "shows"
  * @param uuid {Array<string>} An array of UUIDs to retrieve information about.
- * @param fields {Array<string>} An array of the field names you wish to retrieve.
  */
-function getBasicData(type, uuid, fields = []) {
-    let fieldsString;
-    if (fields.length > 0) {
-        // Format fields requested for SQL
-        fieldsString = fields.reduce((out, next) => {
-            return out + ", " + next;
-        })
-    } else {
-        // Get all fields
-        fieldsString = "*";
-    }
-
+function getBasicData(type, uuid) {
     // Format multiple UUIDs for SQL
     let uuidString = uuid.reduce((out, next) => {
         return out + " OR id = " + next;
     })
 
-    return connection.query("SELECT " + fieldsString + " FROM " + type + " WHERE id = " + uuidString);
+    return query("SELECT * FROM " + type + " WHERE id = " + uuidString);
 }
 
-module.exports = {connect, init, getBasicData};
+function query(sql) {
+    return connection.query(sql);
+}
+
+module.exports = {connect, init, getBasicData, query};
 
