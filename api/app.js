@@ -22,6 +22,10 @@ function start(connection) {
     sponsors.init(db);
     const people = require('./src/people');
     people.init(db);
+    const shows = require('./src/shows');
+    shows.init(db);
+    const images = require('./src/images');
+    images.init(db);
 
     app.get('/api/:type', (req, res) => {
         if (req.query["id"]) {
@@ -36,6 +40,12 @@ function start(connection) {
                     break;
                 case "people":
                     people.get(req.query["id"]).then(data => sendJson(data, res))
+                    break;
+                case "shows":
+                    shows.get(req.query["id"]).then(data => sendJson(data, res))
+                    break;
+                case "images":
+                    images.get(req.query["id"]).then(data => sendJson(data, res))
                     break;
             }
 
