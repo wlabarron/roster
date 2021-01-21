@@ -737,3 +737,240 @@ test("Calculate a week-of-month show and get high-detail information about it", 
         }])
     })
 });
+
+test("Calculate a show on 2nd-to-last Wednesday of month and get low-detail information about it", () => {
+    let april1at0am = dayjs("2021-04-01T00:00:00+00:00");
+    let april30at1159pm = dayjs("2021-04-30T23:59:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "3,2",
+        recurrence_start: "2021-01-19",
+        recurrence_end: "2021-06-23"
+    }, april1at0am, april30at1159pm, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-04-21T09:00:00+01:00",
+                to: "2021-04-21T10:30:00+01:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a show on last Tuesday of month and get low-detail information about it", () => {
+    let april1at0am = dayjs("2021-04-01T00:00:00+00:00");
+    let may31at1159pm = dayjs("2021-05-31T23:59:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "2,1",
+        recurrence_start: "2020-10-19",
+        recurrence_end: "2021-07-29"
+    }, april1at0am, may31at1159pm, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-04-27T09:00:00+01:00",
+                to: "2021-04-27T10:30:00+01:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            },
+            {
+                from: "2021-05-25T09:00:00+01:00",
+                to: "2021-05-25T10:30:00+01:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a show on last Sunday of month and get low-detail information about it", () => {
+    let april1at0am = dayjs("2021-04-01T00:00:00+00:00");
+    let april30at1159pm = dayjs("2021-04-30T23:59:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "0,1",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-10-23"
+    }, april1at0am, april30at1159pm, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-04-25T09:00:00+01:00",
+                to: "2021-04-25T10:30:00+01:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a show on 6th-to-last Friday of month (doesn't exist) and get low-detail information about it", () => {
+    let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
+    let february14at1159pm = dayjs("2021-02-14T23:59:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "5,6",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-03-23"
+    }, january1at0am, february14at1159pm, false).then(data => {
+        expect(data).toStrictEqual([])
+    })
+});
+
+test("Calculate a show on 3rd-to-last Friday of month, starting but not finishing within the request frame", () => {
+    let january2at8am = dayjs("2021-01-02T08:00:00+00:00");
+    let january15at10am = dayjs("2021-01-15T10:00:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "5,3",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-01-23"
+    }, january2at8am, january15at10am, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-01-15T09:00:00+00:00",
+                to: "2021-01-15T10:30:00+00:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a show on 3rd-to-last Friday of month, finishing but not starting within the request frame", () => {
+    let january15at930am = dayjs("2021-01-02T08:09:30+00:00");
+    let january15at11am = dayjs("2021-01-15T11:00:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "5,3",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-01-23"
+    }, january15at930am, january15at11am, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-01-15T09:00:00+00:00",
+                to: "2021-01-15T10:30:00+00:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a week-from-end-of-month show which does not occur within the request frame", () => {
+    let january4at930am = dayjs("2021-01-04T08:09:30+00:00");
+    let january6at11am = dayjs("2021-01-06T11:00:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "5,3",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-01-23"
+    }, january4at930am, january6at11am, false).then(data => {
+        expect(data).toStrictEqual([])
+    })
+});
+
+test("Calculate a week-from-end-of-month show and get high-detail information about it", () => {
+    let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
+    let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
+
+    return schedule.scheduleDayOfMonth("end", {
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "2,4",
+        recurrence_start: "2021-01-02",
+        recurrence_end: "2021-01-31"
+    }, january1at0am, january31at1159pm, true).then(data => {
+        expect(data).toStrictEqual([{
+            from: "2021-01-05T09:00:00+00:00",
+            to: "2021-01-05T10:30:00+00:00",
+            detail: {
+                id: "99066300793356290",
+                nick: 'satbreak',
+                name: 'Saturday Breakfast',
+                tagline: 'Wake up to the weekend with a great mix of music.',
+                description: 'Since 2015, Andrew has been starting your weekend off with a great mix of feel-good music, from the latest chart-topping tunes to the golden oldies you love.',
+                email: null,
+                profileImage: {
+                    url: 'https://via.placeholder.com/750.png',
+                    alt: 'Andrew smiles at the camera, with headphones around his neck.'
+                },
+                coverImage: {
+                    url: 'https://via.placeholder.com/1200x750.png',
+                    alt: 'The sun rises over the mountains'
+                },
+                url: null,
+                people: {
+                    '99066300793356288': {
+                        nick: 'ab',
+                        name: 'Andrew Barron',
+                        description: "Andrew's been on the airwaves since he was 13, and somehow we still let him have a show!",
+                        email: null,
+                        profileImage: {
+                            url: 'https://via.placeholder.com/750.png',
+                            alt: 'Andrew smiles at the camera, with headphones around his neck.'
+                        },
+                        coverImage: {
+                            url: 'https://via.placeholder.com/1200x750.png',
+                            alt: 'The sun rises over the mountains'
+                        },
+                        url: null,
+                        role: "Presenter"
+                    }
+                },
+                sponsors: {
+                    '99066300793356292': {
+                        nick: 'taxi',
+                        name: 'Speedy Taxis',
+                        description: "Get where you're going safely and quickly with Speedy Taxis - mention This Radio Station for 10% off!",
+                        email: 'book@example.com',
+                        profileImage: {
+                            url: 'https://via.placeholder.com/750.png',
+                            alt: 'Speedy Taxis'
+                        },
+                        coverImage: null,
+                        url: {
+                            '99075283969114114': {
+                                "name": "Facebook",
+                                "url": "https://www.facebook.com/speedytaxis"
+                            },
+                            '99075283969114116': {
+                                "name": "Twitter",
+                                "url": "https://twitter.com/speedytaxis"
+                            }
+                        },
+                        detail: "Sponsors Song from a Soundtrack"
+                    }
+                }
+            }
+        }])
+    })
+});

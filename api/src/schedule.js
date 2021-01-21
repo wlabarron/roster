@@ -207,6 +207,49 @@ function fromFront(potentialDate, targetDay, dayOfMonth) {
 }
 
 /**
+ * Calculates the nth-to-last day of a month (like 2nd-to-last Tuesday).
+ * @param {dayjs.Dayjs} potentialDate A date object, referring to any date within the month you want to check.
+ * @param {number} targetDay The day of the week to use, where 0 is Sunday and 6 is Saturday.
+ * @param {number} dayOfMonth The occurrence of that day from the end of the month - e.g. for the last Friday, this
+ *                            would be 1. The penultimate Friday would be 2, and so on.
+ * @returns {null|dayjs.Dayjs} A date object referring to the target day, or null if the requested date doesn't exist.
+ */
+function fromEnd(potentialDate, targetDay, dayOfMonth) {
+    // Go to the end of the month
+    potentialDate = potentialDate.endOf("month");
+
+    // Get the last day of the month, and note the month we're working in
+    let lastDay = potentialDate.day();
+    let workingMonth = potentialDate.month();
+
+    // We now need to move from the last of the month, to the last occurrence of the target day:
+    // i.e. move from the 31st of January to the last Friday in January
+    if (lastDay === targetDay) {
+        // Already there!
+    } else if (lastDay > targetDay) { // Target day is in the same week as the last day
+        // Safe to jump directly to the target day, since in the same week
+        potentialDate = potentialDate.day(targetDay);
+    } else { // Target day is in the week preceding the last week of the month (e.g. month ends on Wednesday, we want Friday)
+        // Move to the start of the week
+        potentialDate = potentialDate.startOf("week");
+        // Move back one day, to the preceding week
+        potentialDate = potentialDate.subtract(1, "day");
+        // Move to the target day within that week
+        potentialDate = potentialDate.day(targetDay);
+    }
+
+    // Now, we need to move the the nth occurrence of that day - e.g. moving from the last Friday to the 3rd-to-last Friday
+    potentialDate = potentialDate.subtract(dayOfMonth, "week");
+
+    // Check that the jumping back X weeks hasn't put us into the previous month. If it has, discard this attempt.
+    if (potentialDate.month() === workingMonth) {
+        return potentialDate;
+    } else {
+        return null;
+    }
+}
+
+/**
  * Processes a show occurring on a given day of the month (such as the 3rd Friday or last Tuesday), returning all
  * occurrences between requestStart and requestEnd. If the show is not due to happen between the requestStart and
  * requestEnd periods, then an empty array is returned.
@@ -244,9 +287,9 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
 
         // Get a potential show date from the start or end of the month, as necessary
         if (from === "start") {
-            potentialDate = fromFront(potentialDate, targetDay, dayOfMonth, workingMonth);
+            potentialDate = fromFront(potentialDate, targetDay, dayOfMonth);
         } else if (from === "end") {
-            // TODO from end
+            potentialDate = fromEnd(potentialDate, targetDay, dayOfMonth);
         } else {
             throw new Error();
         }
