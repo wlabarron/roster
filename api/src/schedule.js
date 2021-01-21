@@ -6,13 +6,13 @@
 
 'use strict';
 
-const common = require('./common');
 const shows = require('./shows');
 const dayjs = require('dayjs');
 
 dayjs.extend(require('dayjs/plugin/customParseFormat'));
 dayjs.extend(require('dayjs/plugin/isSameOrAfter'));
 dayjs.extend(require('dayjs/plugin/isSameOrBefore'));
+dayjs.extend(require('dayjs/plugin/isBetween'));
 
 let db;
 
@@ -85,10 +85,11 @@ function prepareShowInfo(show, start, end, detail) {
 
 /**
  * Processes a one-off show, if it is between the request start and end dates. If the show is not due to happen between
- * the requestStat and requestEnd periods, then an empty object is returned.
+ * the requestStart and requestEnd periods, then an empty object is returned.
  * @param {Object} show A show object from the database. Needs an item keyed "start_time" with a time
- *                      in format HH:mm, an item keyed "duration" with the show duration in seconds, and an item keyed
- *                      "recurrence_start" with the start date of the show.
+ *                      in format HH:mm, an item keyed "duration" with the show duration in seconds, an item keyed
+ *                      "recurrence_start" with the start date of the show, an item keyed "recurrence_end" with the end
+ *                      date of the show.
  * @param requestStart {dayjs.Dayjs} Object representing the start date of the request period.
  * @param requestEnd {dayjs.Dayjs} Object representing the end date of the request period.
  * @param detail {boolean} true for all show information to be returned, otherwise false.
@@ -99,7 +100,7 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
     let showStart = calculateStart(show, show["recurrence_start"]);
     let showEnd = calculateEnd(show, show["recurrence_end"]);
 
-    if (showStart.isSameOrAfter(requestStart) && showEnd.isSameOrBefore(requestEnd)) {
+    if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
         return prepareShowInfo(show.id, showStart, showEnd, detail)
     } else {
         return new Promise(resolve => {
@@ -108,4 +109,52 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
     }
 }
 
-module.exports = {init, calculateStart, calculateEnd, prepareShowInfo, scheduleOnce}
+/**
+ * Processes a regularly recurring show, returning all occurrences between requestStart and requestEnd. If the show is
+ * not due to happen between the requestStart and requestEnd periods, then an empty object is returned.
+ * @param {Object} show A show object from the database. Needs an item keyed "start_time" with a time
+ *                      in format HH:mm, an item keyed "duration" with the show duration in seconds, an item keyed
+ *                      "recurrence_start" with the start date of the show, an item keyed "recurrence_end" with the end
+ *                      date of the show, and an item keyed "recurrence_period" with the number of days between each
+ *                      occurrence (e.g. "7" for 1 week).
+ * @param requestStart {dayjs.Dayjs} Object representing the start date of the request period.
+ * @param requestEnd {dayjs.Dayjs} Object representing the end date of the request period.
+ * @param detail {boolean} true for all show information to be returned, otherwise false.
+ * @returns {Promise} A promise of an array of objects complying with the API with information about the show, or empty array
+ *                   if the show is not due to happen within the request period.
+ */
+function scheduleEvery(show, requestStart, requestEnd, detail) {
+    // Calculate the start time of the first ever show, the date of the last show, and get the recurrence period as a number
+    let showStart = calculateStart(show, show["recurrence_start"]);
+    let recurrenceEnd = dayjs(show["recurrence_end"], "YYYY-MM-DD");
+    let period = parseInt(show["recurrence_period"])
+
+    let showDetailPromises = [];
+
+    // Working through each show occurrence now. While the start time of a given occurrence is before the end of the
+    // request period and the given occurrence is before the end of the recurrence set itself
+    while (showStart.isSameOrBefore(requestEnd) && showStart.isSameOrBefore(recurrenceEnd, "day")) {
+        let showEnd = calculateEnd(show, showStart.format("YYYY-MM-DD"));
+
+        // Check if the show times are within the request period
+        if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
+            // Add a promise for information about the show to an array.
+            showDetailPromises.push(prepareShowInfo(show.id, showStart, showEnd, detail));
+        }
+
+        // Move on to the next potential occurrence
+        showStart = showStart.add(period, "day");
+    }
+
+    return Promise.allSettled(showDetailPromises).then(data => {
+        // Once all the show detail promises are settled, prepare a nice results array
+        let results = [];
+        for (const item of data) {
+            results.push(item.value);
+        }
+
+        return results;
+    });
+}
+
+module.exports = {init, calculateStart, calculateEnd, prepareShowInfo, scheduleOnce, scheduleEvery}
