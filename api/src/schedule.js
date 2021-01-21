@@ -278,7 +278,7 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
     let showDetailPromises = [];
 
     // Initial date to start working from
-    let potentialDate = requestStart;
+    let potentialDate = dayjs(requestStart);
 
     // While we're before the end of the series and request timeframe
     while (potentialDate.isSameOrBefore(recurrenceEnd, "day") && potentialDate.isSameOrBefore(requestEnd, "day")) {
