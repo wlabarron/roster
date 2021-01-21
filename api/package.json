@@ -20,6 +20,7 @@
     "jest": "^26.6.3"
   },
   "dependencies": {
+    "dayjs": "^1.10.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "promise-mysql": "^5.0.1"
