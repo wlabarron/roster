@@ -167,9 +167,50 @@ function scheduleEvery(show, requestStart, requestEnd, detail) {
 }
 
 /**
- * Processes a show occurring on a given day of the month (such as the 3rd Friday), returning all occurrences between
- * requestStart and requestEnd. If the show is not due to happen between the requestStart and requestEnd periods, then
- * an empty array is returned.
+ * Calculates the nth day of a month (like 3rd Friday).
+ * @param {dayjs.Dayjs} potentialDate A date object, referring to any date within the month you want to check.
+ * @param {number} targetDay The day of the week to use, where 0 is Sunday and 6 is Saturday.
+ * @param {number} dayOfMonth The occurrence of that day in the month - e.g. for the 3rd Friday, this would be 3.
+ * @returns {null|dayjs.Dayjs} A date object referring to the target day, or null if the requested date doesn't exist.
+ */
+function fromFront(potentialDate, targetDay, dayOfMonth) {
+    // Go to the start of the month
+    potentialDate = potentialDate.startOf("month");
+
+    // Get the first day of the month, and note the month we're working in
+    let firstDay = potentialDate.day();
+    let workingMonth = potentialDate.month();
+
+    // We now need to move from the 1st of the month, to the first occurrence of the target day:
+    // i.e. move from the 1st of January to the 1st Friday in January
+    if (firstDay === targetDay) {
+        // Already there!
+    } else if (firstDay > targetDay) { // First day is after the target day (e.g. month starts on Friday, we want Wednesday)
+        // Move forward to the first Sunday
+        potentialDate = potentialDate.day(7);
+        // Move to the first occurrence of the target day
+        potentialDate = potentialDate.day(targetDay);
+    } else { // First day is before the target day (e.g. month starts on Wednesday, we want Friday)
+        // Move to the first occurrence of the target day
+        potentialDate = potentialDate.day(targetDay);
+    }
+
+    // Now, we need to move the the nth occurrence of that day - e.g. moving from the 1st Friday to the 3rd Friday
+    potentialDate = potentialDate.add(dayOfMonth, "week");
+
+    // Check that the jumping forward X weeks hasn't put us into the next month. If it has, discard this attempt.
+    if (potentialDate.month() === workingMonth) {
+        return potentialDate;
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Processes a show occurring on a given day of the month (such as the 3rd Friday or last Tuesday), returning all
+ * occurrences between requestStart and requestEnd. If the show is not due to happen between the requestStart and
+ * requestEnd periods, then an empty array is returned.
+ * @param {"start"|"end"} from Whether to count weeks from the start or end of the month.
  * @param {Object} show A show object from the database. Needs an item keyed "start_time" with a time
  *                      in format HH:mm, an item keyed "duration" with the show duration in seconds, an item keyed
  *                      "recurrence_start" with the start date of the show, an item keyed "recurrence_end" with the end
@@ -182,11 +223,11 @@ function scheduleEvery(show, requestStart, requestEnd, detail) {
  * @returns {Promise} A promise of an array of objects complying with the API with information about the show, or empty array
  *                   if the show is not due to happen within the request period.
  */
-function scheduleFromStartOfMonth(show, requestStart, requestEnd, detail) {
+function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
     let period = show["recurrence_period"].split(",");
     let targetDay = period[0];
     let dayOfMonth = period[1] - 1; // subtract one since 1st Friday means 0 jumps forward from the 1 first Friday,
-                                    // 2nd Friday means 1 jump forward from the first Friday, etc
+                                    // 2nd Friday means 1 jump forward from the first Friday, etc. Same in reverse.
 
     let recurrenceStart = dayjs(show["recurrence_start"], "YYYY-MM-DD");
     let recurrenceEnd = dayjs(show["recurrence_end"], "YYYY-MM-DD");
@@ -194,32 +235,24 @@ function scheduleFromStartOfMonth(show, requestStart, requestEnd, detail) {
     let showDetailPromises = [];
 
     // Initial date to start working from
-    let potentialDate = requestStart.startOf("month");
+    let potentialDate = requestStart;
 
+    // While we're before the end of the series and request timeframe
     while (potentialDate.isSameOrBefore(recurrenceEnd, "day") && potentialDate.isSameOrBefore(requestEnd, "day")) {
-        // Get the first day of the month, and note the month we're working in
-        let firstDay = potentialDate.day();
         let workingMonth = potentialDate.month();
+        let workingYear = potentialDate.year();
 
-        // We now need to move from the 1st of the month, to the first occurrence of the target day:
-        // i.e. move from the 1st of January to the 1st Friday in January
-        if (firstDay === targetDay) {
-            // Already there!
-        } else if (firstDay > targetDay) { // First day is after the target day (e.g. month starts on Friday, we want Wednesday)
-            // Move forward to the first Sunday
-            potentialDate = potentialDate.day(7);
-            // Move to the first occurrence of the target day
-            potentialDate = potentialDate.day(targetDay);
-        } else { // First day is before the target day (e.g. month starts on Wednesday, we want Friday)
-            // Move to the first occurrence of the target day
-            potentialDate = potentialDate.day(targetDay);
+        // Get a potential show date from the start or end of the month, as necessary
+        if (from === "start") {
+            potentialDate = fromFront(potentialDate, targetDay, dayOfMonth, workingMonth);
+        } else if (from === "end") {
+            // TODO from end
+        } else {
+            throw new Error();
         }
 
-        // Now, we need to move the the nth occurrence of that day - e.g. moving from the 1st Friday to the 3rd Friday
-        potentialDate = potentialDate.add(dayOfMonth, "week");
-
-        // Check that the jumping forward X weeks hasn't put us into the next month. If it has, discard this attempt.
-        if (potentialDate.month() === workingMonth) {
+        // If there is a potential date returned
+        if (potentialDate) {
             // Check if a show is due to happen on that day, based on the recurrence start and end dates
             if (potentialDate.isBetween(recurrenceStart, recurrenceEnd, "day", "[[")) {
                 let showStart = calculateStart(show, potentialDate.format("YYYY-MM-DD"));
@@ -234,7 +267,7 @@ function scheduleFromStartOfMonth(show, requestStart, requestEnd, detail) {
         }
 
         // Create a new dayjs object on the first of next month, ready to keep working through
-        potentialDate = dayjs().year(potentialDate.year()).month(workingMonth + 1).startOf("month");
+        potentialDate = dayjs().year(workingYear).month(workingMonth + 1).startOf("month");
     }
 
     return settlePromises(showDetailPromises);
@@ -247,5 +280,5 @@ module.exports = {
     prepareShowInfo,
     scheduleOnce,
     scheduleEvery,
-    scheduleFromStartOfMonth
+    scheduleDayOfMonth
 }

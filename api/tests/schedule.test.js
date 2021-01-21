@@ -491,7 +491,7 @@ test("Calculate a show on 2nd Wednesday of month and get low-detail information 
     let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -515,7 +515,7 @@ test("Calculate a show on 1st Tuesday of month and get low-detail information ab
     let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
     let may31at1159pm = dayjs("2021-05-31T23:59:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -560,7 +560,7 @@ test("Calculate a show on 1st Friday of month and get low-detail information abo
     let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -584,7 +584,7 @@ test("Calculate a show on 6th Friday of month (doesn't exist) and get low-detail
     let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
     let february14at1159pm = dayjs("2021-02-14T23:59:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -600,7 +600,7 @@ test("Calculate a show on 3rd Friday of month, starting but not finishing within
     let january2at8am = dayjs("2021-01-02T08:00:00+00:00");
     let january15at10am = dayjs("2021-01-15T10:00:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -624,7 +624,7 @@ test("Calculate a show on 3rd Friday of month, finishing but not starting within
     let january15at930am = dayjs("2021-01-02T08:09:30+00:00");
     let january15at11am = dayjs("2021-01-15T11:00:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -648,7 +648,7 @@ test("Calculate a week-of-month show which does not occur within the request fra
     let january4at930am = dayjs("2021-01-04T08:09:30+00:00");
     let january6at11am = dayjs("2021-01-06T11:00:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
@@ -664,7 +664,7 @@ test("Calculate a week-of-month show and get high-detail information about it", 
     let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
-    return schedule.scheduleFromStartOfMonth({
+    return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
