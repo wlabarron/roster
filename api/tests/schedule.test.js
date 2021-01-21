@@ -345,6 +345,70 @@ test("Calculate a regularly-recurring show and get low-detail information about 
     })
 });
 
+test("Calculate a regularly-recurring show with an occurrence starting but not finishing within the request frame", () => {
+    let january2at8am = dayjs("2021-01-02T08:00:00+00:00");
+    let january2at10am = dayjs("2021-01-02T10:00:00+00:00");
+
+    return schedule.scheduleEvery({
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "7",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-01-23"
+    }, january2at8am, january2at10am, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-01-02T09:00:00+00:00",
+                to: "2021-01-02T10:30:00+00:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a regularly-recurring show with an occurrence finishing but not starting within the request frame", () => {
+    let january2at930am = dayjs("2021-01-02T08:09:30+00:00");
+    let january2at11am = dayjs("2021-01-02T11:00:00+00:00");
+
+    return schedule.scheduleEvery({
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "7",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-01-23"
+    }, january2at930am, january2at11am, false).then(data => {
+        expect(data).toStrictEqual([
+            {
+                from: "2021-01-02T09:00:00+00:00",
+                to: "2021-01-02T10:30:00+00:00",
+                detail: {
+                    id: "99066300793356290"
+                }
+            }
+        ])
+    })
+});
+
+test("Calculate a regularly-recurring show which does not occur within the request frame", () => {
+    let january4at930am = dayjs("2021-01-04T08:09:30+00:00");
+    let january6at11am = dayjs("2021-01-06T11:00:00+00:00");
+
+    return schedule.scheduleEvery({
+        id: "99066300793356290",
+        start_time: "9:00",
+        duration: 5400,
+        recurrence_period: "7",
+        recurrence_start: "2020-12-19",
+        recurrence_end: "2021-01-23"
+    }, january4at930am, january6at11am, false).then(data => {
+        expect(data).toStrictEqual([])
+    })
+});
+
 test("Calculate a regularly-recurring show and get high-detail information about it", () => {
     let january1at0am = dayjs("2021-01-01T00:00:00+00:00");
     let january3at1159pm = dayjs("2021-01-03T23:59:00+00:00");
