@@ -155,7 +155,7 @@ test("Calculate a one-off show occurrence and get low-detail information about i
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december25at9am, december27at1030am, false).then(data => {
@@ -178,7 +178,7 @@ test("Calculate a one-off show occurrence and get high-detail information about 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december25at9am, december27at1030am, true).then(data => {
@@ -257,7 +257,7 @@ test("Calculate a one-off show occurrence which starts but doesn't finish in the
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december26at9am, december26at10am, false).then(data => {
@@ -280,7 +280,7 @@ test("Calculate a one-off show occurrence which finishes but doesn't start in th
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december26at930am, december26at11am, false).then(data => {
@@ -303,7 +303,7 @@ test("Calculate a one-off show occurrence which doesn't occur in the request per
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december27at9am, december31at1030am, true).then(data => {
@@ -319,7 +319,7 @@ test("Calculate a regularly-recurring show and get low-detail information about 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -369,7 +369,7 @@ test("Calculate a regularly-recurring show with an occurrence starting but not f
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -395,7 +395,7 @@ test("Calculate a regularly-recurring show with an occurrence finishing but not 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -421,7 +421,7 @@ test("Calculate a regularly-recurring show which does not occur within the reque
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -438,7 +438,7 @@ test("Calculate a regularly-recurring show and get high-detail information about
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "7",
         recurrence_start: "2021-01-02",
         recurrence_end: "2021-01-23"
@@ -518,7 +518,7 @@ test("Calculate a show on 2nd Wednesday of month and get low-detail information 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "3,2",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -544,7 +544,7 @@ test("Calculate a show on 1st Tuesday of month and get low-detail information ab
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "2,1",
         recurrence_start: "2020-10-19",
         recurrence_end: "2021-04-29"
@@ -594,7 +594,7 @@ test("Calculate a show on 1st Friday of month and get low-detail information abo
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "5,1",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -620,7 +620,7 @@ test("Calculate a show on 6th Friday of month (doesn't exist) and get low-detail
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "5,6",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-03-23"
@@ -637,7 +637,7 @@ test("Calculate a show on 3rd Friday of month, starting but not finishing within
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -662,8 +662,8 @@ test("Calculate a show on 3rd Friday of month, finishing but not starting within
     return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
-        newShow: false,
         duration: 5400,
+        new_show: false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -689,7 +689,7 @@ test("Calculate a week-of-month show which does not occur within the request fra
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -706,7 +706,7 @@ test("Calculate a week-of-month show and get high-detail information about it", 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "2,4",
         recurrence_start: "2021-01-02",
         recurrence_end: "2021-01-31"
@@ -786,7 +786,7 @@ test("Calculate a show on 2nd-to-last Wednesday of month and get low-detail info
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "3,2",
         recurrence_start: "2021-01-19",
         recurrence_end: "2021-06-23"
@@ -812,7 +812,7 @@ test("Calculate a show on last Tuesday of month and get low-detail information a
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "2,1",
         recurrence_start: "2020-10-19",
         recurrence_end: "2021-07-29"
@@ -846,7 +846,7 @@ test("Calculate a show on last Sunday of month and get low-detail information ab
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "0,1",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-10-23"
@@ -872,7 +872,7 @@ test("Calculate a show on 6th-to-last Friday of month (doesn't exist) and get lo
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "5,6",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-03-23"
@@ -889,7 +889,7 @@ test("Calculate a show on 3rd-to-last Friday of month, starting but not finishin
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -915,7 +915,7 @@ test("Calculate a show on 3rd-to-last Friday of month, finishing but not startin
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: false,
+        "new_show": false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -941,7 +941,7 @@ test("Calculate a week-from-end-of-month show which does not occur within the re
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -958,7 +958,7 @@ test("Calculate a week-from-end-of-month show and get high-detail information ab
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        newShow: true,
+        "new_show": true,
         recurrence_period: "2,4",
         recurrence_start: "2021-01-02",
         recurrence_end: "2021-01-31"
