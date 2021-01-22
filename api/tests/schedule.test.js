@@ -61,13 +61,14 @@ test("Get low-detail information about a show occurrence", () => {
     let december26at9am = dayjs("2020-12-26T09:00:00+00:00");
     let december26at1030am = dayjs("2020-12-26T10:30:00+00:00");
 
-    return schedule.prepareShowInfo("99066300793356290", december26at9am, december26at1030am, false).then(data => {
+    return schedule.prepareShowInfo("99066300793356290", true, december26at9am, december26at1030am, false).then(data => {
         expect(data)
             .toStrictEqual({
                 from: "2020-12-26T09:00:00+00:00",
                 to: "2020-12-26T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             })
     })
@@ -77,13 +78,14 @@ test("Get high-detail information about a show occurrence", () => {
     let december26at9am = dayjs("2020-12-26T09:00:00+00:00");
     let december26at1030am = dayjs("2020-12-26T10:30:00+00:00");
 
-    return schedule.prepareShowInfo("99066300793356290", december26at9am, december26at1030am, true).then(data => {
+    return schedule.prepareShowInfo("99066300793356290", false, december26at9am, december26at1030am, true).then(data => {
         expect(data)
             .toStrictEqual({
                 from: "2020-12-26T09:00:00+00:00",
                 to: "2020-12-26T10:30:00+00:00",
                 detail: {
                     id: "99066300793356290",
+                    new: false,
                     nick: 'satbreak',
                     name: 'Saturday Breakfast',
                     tagline: 'Wake up to the weekend with a great mix of music.',
@@ -153,6 +155,7 @@ test("Calculate a one-off show occurrence and get low-detail information about i
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december25at9am, december27at1030am, false).then(data => {
@@ -160,7 +163,8 @@ test("Calculate a one-off show occurrence and get low-detail information about i
             from: "2020-12-26T09:00:00+00:00",
             to: "2020-12-26T10:30:00+00:00",
             detail: {
-                id: "99066300793356290"
+                id: "99066300793356290",
+                new: false
             }
         })
     })
@@ -174,6 +178,7 @@ test("Calculate a one-off show occurrence and get high-detail information about 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december25at9am, december27at1030am, true).then(data => {
@@ -182,6 +187,7 @@ test("Calculate a one-off show occurrence and get high-detail information about 
             to: "2020-12-26T10:30:00+00:00",
             detail: {
                 id: "99066300793356290",
+                new: true,
                 nick: 'satbreak',
                 name: 'Saturday Breakfast',
                 tagline: 'Wake up to the weekend with a great mix of music.',
@@ -251,6 +257,7 @@ test("Calculate a one-off show occurrence which starts but doesn't finish in the
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december26at9am, december26at10am, false).then(data => {
@@ -258,7 +265,8 @@ test("Calculate a one-off show occurrence which starts but doesn't finish in the
             from: "2020-12-26T09:00:00+00:00",
             to: "2020-12-26T10:30:00+00:00",
             detail: {
-                id: "99066300793356290"
+                id: "99066300793356290",
+                new: true
             }
         })
     })
@@ -272,6 +280,7 @@ test("Calculate a one-off show occurrence which finishes but doesn't start in th
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december26at930am, december26at11am, false).then(data => {
@@ -279,7 +288,8 @@ test("Calculate a one-off show occurrence which finishes but doesn't start in th
             from: "2020-12-26T09:00:00+00:00",
             to: "2020-12-26T10:30:00+00:00",
             detail: {
-                id: "99066300793356290"
+                id: "99066300793356290",
+                new: true
             }
         })
     })
@@ -293,6 +303,7 @@ test("Calculate a one-off show occurrence which doesn't occur in the request per
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_start: "2020-12-26",
         recurrence_end: "2020-12-26"
     }, december27at9am, december31at1030am, true).then(data => {
@@ -308,6 +319,7 @@ test("Calculate a regularly-recurring show and get low-detail information about 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -317,28 +329,32 @@ test("Calculate a regularly-recurring show and get low-detail information about 
                 from: "2021-01-02T09:00:00+00:00",
                 to: "2021-01-02T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             },
             {
                 from: "2021-01-09T09:00:00+00:00",
                 to: "2021-01-09T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             },
             {
                 from: "2021-01-16T09:00:00+00:00",
                 to: "2021-01-16T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             },
             {
                 from: "2021-01-23T09:00:00+00:00",
                 to: "2021-01-23T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             }
         ])
@@ -353,6 +369,7 @@ test("Calculate a regularly-recurring show with an occurrence starting but not f
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -362,7 +379,8 @@ test("Calculate a regularly-recurring show with an occurrence starting but not f
                 from: "2021-01-02T09:00:00+00:00",
                 to: "2021-01-02T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -377,6 +395,7 @@ test("Calculate a regularly-recurring show with an occurrence finishing but not 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -386,7 +405,8 @@ test("Calculate a regularly-recurring show with an occurrence finishing but not 
                 from: "2021-01-02T09:00:00+00:00",
                 to: "2021-01-02T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -401,6 +421,7 @@ test("Calculate a regularly-recurring show which does not occur within the reque
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "7",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -417,6 +438,7 @@ test("Calculate a regularly-recurring show and get high-detail information about
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "7",
         recurrence_start: "2021-01-02",
         recurrence_end: "2021-01-23"
@@ -426,6 +448,7 @@ test("Calculate a regularly-recurring show and get high-detail information about
             to: "2021-01-02T10:30:00+00:00",
             detail: {
                 id: "99066300793356290",
+                new: false,
                 nick: 'satbreak',
                 name: 'Saturday Breakfast',
                 tagline: 'Wake up to the weekend with a great mix of music.',
@@ -495,6 +518,7 @@ test("Calculate a show on 2nd Wednesday of month and get low-detail information 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "3,2",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -504,7 +528,8 @@ test("Calculate a show on 2nd Wednesday of month and get low-detail information 
                 from: "2021-01-13T09:00:00+00:00",
                 to: "2021-01-13T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -519,6 +544,7 @@ test("Calculate a show on 1st Tuesday of month and get low-detail information ab
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "2,1",
         recurrence_start: "2020-10-19",
         recurrence_end: "2021-04-29"
@@ -528,28 +554,32 @@ test("Calculate a show on 1st Tuesday of month and get low-detail information ab
                 from: "2021-01-05T09:00:00+00:00",
                 to: "2021-01-05T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             },
             {
                 from: "2021-02-02T09:00:00+00:00",
                 to: "2021-02-02T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             },
             {
                 from: "2021-03-02T09:00:00+00:00",
                 to: "2021-03-02T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             },
             {
                 from: "2021-04-06T09:00:00+01:00",
                 to: "2021-04-06T10:30:00+01:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             }
         ])
@@ -564,6 +594,7 @@ test("Calculate a show on 1st Friday of month and get low-detail information abo
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "5,1",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -573,7 +604,8 @@ test("Calculate a show on 1st Friday of month and get low-detail information abo
                 from: "2021-01-01T09:00:00+00:00",
                 to: "2021-01-01T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -588,6 +620,7 @@ test("Calculate a show on 6th Friday of month (doesn't exist) and get low-detail
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "5,6",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-03-23"
@@ -604,6 +637,7 @@ test("Calculate a show on 3rd Friday of month, starting but not finishing within
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -613,7 +647,8 @@ test("Calculate a show on 3rd Friday of month, starting but not finishing within
                 from: "2021-01-15T09:00:00+00:00",
                 to: "2021-01-15T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             }
         ])
@@ -627,6 +662,7 @@ test("Calculate a show on 3rd Friday of month, finishing but not starting within
     return schedule.scheduleDayOfMonth("start", {
         id: "99066300793356290",
         start_time: "9:00",
+        new: false,
         duration: 5400,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
@@ -637,7 +673,8 @@ test("Calculate a show on 3rd Friday of month, finishing but not starting within
                 from: "2021-01-15T09:00:00+00:00",
                 to: "2021-01-15T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false,
                 }
             }
         ])
@@ -652,6 +689,7 @@ test("Calculate a week-of-month show which does not occur within the request fra
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -668,6 +706,7 @@ test("Calculate a week-of-month show and get high-detail information about it", 
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "2,4",
         recurrence_start: "2021-01-02",
         recurrence_end: "2021-01-31"
@@ -677,6 +716,7 @@ test("Calculate a week-of-month show and get high-detail information about it", 
             to: "2021-01-26T10:30:00+00:00",
             detail: {
                 id: "99066300793356290",
+                new: true,
                 nick: 'satbreak',
                 name: 'Saturday Breakfast',
                 tagline: 'Wake up to the weekend with a great mix of music.',
@@ -746,6 +786,7 @@ test("Calculate a show on 2nd-to-last Wednesday of month and get low-detail info
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "3,2",
         recurrence_start: "2021-01-19",
         recurrence_end: "2021-06-23"
@@ -755,7 +796,8 @@ test("Calculate a show on 2nd-to-last Wednesday of month and get low-detail info
                 from: "2021-04-21T09:00:00+01:00",
                 to: "2021-04-21T10:30:00+01:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false,
                 }
             }
         ])
@@ -770,6 +812,7 @@ test("Calculate a show on last Tuesday of month and get low-detail information a
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "2,1",
         recurrence_start: "2020-10-19",
         recurrence_end: "2021-07-29"
@@ -779,14 +822,16 @@ test("Calculate a show on last Tuesday of month and get low-detail information a
                 from: "2021-04-27T09:00:00+01:00",
                 to: "2021-04-27T10:30:00+01:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             },
             {
                 from: "2021-05-25T09:00:00+01:00",
                 to: "2021-05-25T10:30:00+01:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -801,6 +846,7 @@ test("Calculate a show on last Sunday of month and get low-detail information ab
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "0,1",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-10-23"
@@ -810,7 +856,8 @@ test("Calculate a show on last Sunday of month and get low-detail information ab
                 from: "2021-04-25T09:00:00+01:00",
                 to: "2021-04-25T10:30:00+01:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -825,6 +872,7 @@ test("Calculate a show on 6th-to-last Friday of month (doesn't exist) and get lo
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "5,6",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-03-23"
@@ -841,6 +889,7 @@ test("Calculate a show on 3rd-to-last Friday of month, starting but not finishin
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -850,7 +899,8 @@ test("Calculate a show on 3rd-to-last Friday of month, starting but not finishin
                 from: "2021-01-15T09:00:00+00:00",
                 to: "2021-01-15T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: true
                 }
             }
         ])
@@ -865,6 +915,7 @@ test("Calculate a show on 3rd-to-last Friday of month, finishing but not startin
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: false,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -874,7 +925,8 @@ test("Calculate a show on 3rd-to-last Friday of month, finishing but not startin
                 from: "2021-01-15T09:00:00+00:00",
                 to: "2021-01-15T10:30:00+00:00",
                 detail: {
-                    id: "99066300793356290"
+                    id: "99066300793356290",
+                    new: false
                 }
             }
         ])
@@ -889,6 +941,7 @@ test("Calculate a week-from-end-of-month show which does not occur within the re
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "5,3",
         recurrence_start: "2020-12-19",
         recurrence_end: "2021-01-23"
@@ -905,6 +958,7 @@ test("Calculate a week-from-end-of-month show and get high-detail information ab
         id: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
+        new: true,
         recurrence_period: "2,4",
         recurrence_start: "2021-01-02",
         recurrence_end: "2021-01-31"
@@ -914,6 +968,7 @@ test("Calculate a week-from-end-of-month show and get high-detail information ab
             to: "2021-01-05T10:30:00+00:00",
             detail: {
                 id: "99066300793356290",
+                new: true,
                 nick: 'satbreak',
                 name: 'Saturday Breakfast',
                 tagline: 'Wake up to the weekend with a great mix of music.',

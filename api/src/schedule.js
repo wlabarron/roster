@@ -73,18 +73,20 @@ function settlePromises(promises) {
  * Returns an object containing information about a show on a specific date, according to the API specification.
  * @see https://github.com/wlabarron/roster/wiki/API:-Schedule
  * @param show {String} ID of the show.
+ * @param newStatus {boolean} `true` if the show is new, `false` is it's a replay or similar.
  * @param start {*|dayjs.Dayjs} Day.js object representing the start time of the show.
  * @param end {*|dayjs.Dayjs} Day.js object representing the end time of the show.
  * @param detail {boolean} true for all show information to be returned, otherwise false.
  * @return {Promise} A promise of the information object.
  */
-function prepareShowInfo(show, start, end, detail) {
+function prepareShowInfo(show, newStatus, start, end, detail) {
     return new Promise(resolve => {
         let showInfo = {
             from: start.format(),
             to: end.format(),
             detail: {
-                id: show
+                id: show,
+                new: newStatus
             }
         }
 
@@ -118,7 +120,7 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
     let showEnd = calculateEnd(show, show["recurrence_end"]);
 
     if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
-        return prepareShowInfo(show.id, showStart, showEnd, detail)
+        return prepareShowInfo(show.id, show.new, showStart, showEnd, detail)
     } else {
         return new Promise(resolve => {
             resolve(null)
@@ -156,7 +158,7 @@ function scheduleEvery(show, requestStart, requestEnd, detail) {
         // Check if the show times are within the request period
         if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
             // Add a promise for information about the show to an array.
-            showDetailPromises.push(prepareShowInfo(show.id, showStart, showEnd, detail));
+            showDetailPromises.push(prepareShowInfo(show.id, show.new, showStart, showEnd, detail));
         }
 
         // Move on to the next potential occurrence
@@ -304,7 +306,7 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
                 // Check if the show times are within the request period
                 if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
                     // Add a promise for information about the show to an array.
-                    showDetailPromises.push(prepareShowInfo(show.id, showStart, showEnd, detail));
+                    showDetailPromises.push(prepareShowInfo(show.id, show.new, showStart, showEnd, detail));
                 }
             }
         }
