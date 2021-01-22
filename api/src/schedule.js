@@ -86,7 +86,7 @@ function prepareShowInfo(show, newStatus, start, end, detail) {
             to: end.format(),
             detail: {
                 id: show,
-                new: newStatus
+                newShow: newStatus
             }
         }
 
@@ -120,7 +120,7 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
     let showEnd = calculateEnd(show, show["recurrence_end"]);
 
     if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
-        return prepareShowInfo(show.id, show.new, showStart, showEnd, detail)
+        return prepareShowInfo(show.id, show.newShow, showStart, showEnd, detail)
     } else {
         return new Promise(resolve => {
             resolve(null)
@@ -158,7 +158,7 @@ function scheduleEvery(show, requestStart, requestEnd, detail) {
         // Check if the show times are within the request period
         if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
             // Add a promise for information about the show to an array.
-            showDetailPromises.push(prepareShowInfo(show.id, show.new, showStart, showEnd, detail));
+            showDetailPromises.push(prepareShowInfo(show.id, show.newShow, showStart, showEnd, detail));
         }
 
         // Move on to the next potential occurrence
@@ -306,7 +306,7 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
                 // Check if the show times are within the request period
                 if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
                     // Add a promise for information about the show to an array.
-                    showDetailPromises.push(prepareShowInfo(show.id, show.new, showStart, showEnd, detail));
+                    showDetailPromises.push(prepareShowInfo(show.id, show.newShow, showStart, showEnd, detail));
                 }
             }
         }
