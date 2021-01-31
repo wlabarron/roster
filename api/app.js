@@ -26,6 +26,8 @@ function start(connection) {
     shows.init(db);
     const images = require('./src/images');
     images.init(db);
+    const schedule = require('./src/schedule');
+    schedule.init(db);
 
     app.get('/api/:type', (req, res) => {
         if (req.query["id"]) {
@@ -48,7 +50,8 @@ function start(connection) {
                     images.get(req.query["id"]).then(data => sendJson(data, res))
                     break;
             }
-
+        } else if (req.params["type"] === "schedule") {
+            schedule.getShows(req.query["from"], req.query["to"], req.query["detail"]).then(data => sendJson(data, res))
         } else {
             res.status(400);
             res.end()
