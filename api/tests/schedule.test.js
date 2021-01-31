@@ -152,12 +152,12 @@ test("Calculate a one-off show occurrence and get low-detail information about i
     let december27at1030am = dayjs("2020-12-27T10:30:00+00:00");
 
     return schedule.scheduleOnce({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
-        recurrence_start: "2020-12-26",
-        recurrence_end: "2020-12-26"
+        new_show: false,
+        recurrence_start: "2020-12-26T00:00:00.000Z",
+        recurrence_end: "2020-12-26T00:00:00.000Z"
     }, december25at9am, december27at1030am, false).then(data => {
         expect(data).toStrictEqual({
             from: "2020-12-26T09:00:00+00:00",
@@ -175,12 +175,12 @@ test("Calculate a one-off show occurrence and get high-detail information about 
     let december27at1030am = dayjs("2020-12-27T10:30:00+00:00");
 
     return schedule.scheduleOnce({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
-        recurrence_start: "2020-12-26",
-        recurrence_end: "2020-12-26"
+        new_show: true,
+        recurrence_start: "2020-12-26T00:00:00.000Z",
+        recurrence_end: "2020-12-26T00:00:00.000Z"
     }, december25at9am, december27at1030am, true).then(data => {
         expect(data).toStrictEqual({
             from: "2020-12-26T09:00:00+00:00",
@@ -254,12 +254,12 @@ test("Calculate a one-off show occurrence which starts but doesn't finish in the
     let december26at10am = dayjs("2020-12-26T10:00:00+00:00");
 
     return schedule.scheduleOnce({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
-        recurrence_start: "2020-12-26",
-        recurrence_end: "2020-12-26"
+        new_show: true,
+        recurrence_start: "2020-12-26T00:00:00.000Z",
+        recurrence_end: "2020-12-26T00:00:00.000Z"
     }, december26at9am, december26at10am, false).then(data => {
         expect(data).toStrictEqual({
             from: "2020-12-26T09:00:00+00:00",
@@ -277,12 +277,12 @@ test("Calculate a one-off show occurrence which finishes but doesn't start in th
     let december26at11am = dayjs("2020-12-26T11:00:00+00:00");
 
     return schedule.scheduleOnce({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
-        recurrence_start: "2020-12-26",
-        recurrence_end: "2020-12-26"
+        new_show: true,
+        recurrence_start: "2020-12-26T00:00:00.000Z",
+        recurrence_end: "2020-12-26T00:00:00.000Z"
     }, december26at930am, december26at11am, false).then(data => {
         expect(data).toStrictEqual({
             from: "2020-12-26T09:00:00+00:00",
@@ -300,12 +300,12 @@ test("Calculate a one-off show occurrence which doesn't occur in the request per
     let december31at1030am = dayjs("2020-12-31T10:30:00+00:00");
 
     return schedule.scheduleOnce({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
-        recurrence_start: "2020-12-26",
-        recurrence_end: "2020-12-26"
+        new_show: true,
+        recurrence_start: "2020-12-26T00:00:00.000Z",
+        recurrence_end: "2020-12-26T00:00:00.000Z"
     }, december27at9am, december31at1030am, true).then(data => {
         expect(data).toBe(null)
     })
@@ -316,13 +316,13 @@ test("Calculate a regularly-recurring show and get low-detail information about 
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
     return schedule.scheduleEvery({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "7",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january1at0am, january31at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -366,13 +366,13 @@ test("Calculate a regularly-recurring show with an occurrence starting but not f
     let january2at10am = dayjs("2021-01-02T10:00:00+00:00");
 
     return schedule.scheduleEvery({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "7",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january2at8am, january2at10am, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -392,13 +392,13 @@ test("Calculate a regularly-recurring show with an occurrence finishing but not 
     let january2at11am = dayjs("2021-01-02T11:00:00+00:00");
 
     return schedule.scheduleEvery({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "7",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january2at930am, january2at11am, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -418,13 +418,13 @@ test("Calculate a regularly-recurring show which does not occur within the reque
     let january6at11am = dayjs("2021-01-06T11:00:00+00:00");
 
     return schedule.scheduleEvery({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "7",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january4at930am, january6at11am, false).then(data => {
         expect(data).toStrictEqual([])
     })
@@ -435,13 +435,13 @@ test("Calculate a regularly-recurring show and get high-detail information about
     let january3at1159pm = dayjs("2021-01-03T23:59:00+00:00");
 
     return schedule.scheduleEvery({
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "7",
-        recurrence_start: "2021-01-02",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2021-01-02T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january1at0am, january3at1159pm, true).then(data => {
         expect(data).toStrictEqual([{
             from: "2021-01-02T09:00:00+00:00",
@@ -515,13 +515,13 @@ test("Calculate a show on 2nd Wednesday of month and get low-detail information 
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "3,2",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january1at0am, january31at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -541,13 +541,13 @@ test("Calculate a show on 1st Tuesday of month and get low-detail information ab
     let may31at1159pm = dayjs("2021-05-31T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "2,1",
-        recurrence_start: "2020-10-19",
-        recurrence_end: "2021-04-29"
+        recurrence_start: "2020-10-19T00:00:00.000Z",
+        recurrence_end: "2021-04-29T00:00:00.000Z"
     }, january1at0am, may31at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -591,13 +591,13 @@ test("Calculate a show on 1st Friday of month and get low-detail information abo
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "5,1",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january1at0am, january31at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -617,13 +617,13 @@ test("Calculate a show on 6th Friday of month (doesn't exist) and get low-detail
     let february14at1159pm = dayjs("2021-02-14T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "5,6",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-03-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-03-23T00:00:00.000Z"
     }, january1at0am, february14at1159pm, false).then(data => {
         expect(data).toStrictEqual([])
     })
@@ -634,13 +634,13 @@ test("Calculate a show on 3rd Friday of month, starting but not finishing within
     let january15at10am = dayjs("2021-01-15T10:00:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "5,3",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january2at8am, january15at10am, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -660,13 +660,13 @@ test("Calculate a show on 3rd Friday of month, finishing but not starting within
     let january15at11am = dayjs("2021-01-15T11:00:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
         new_show: false,
         recurrence_period: "5,3",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january15at930am, january15at11am, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -686,13 +686,13 @@ test("Calculate a week-of-month show which does not occur within the request fra
     let january6at11am = dayjs("2021-01-06T11:00:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "5,3",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january4at930am, january6at11am, false).then(data => {
         expect(data).toStrictEqual([])
     })
@@ -703,13 +703,13 @@ test("Calculate a week-of-month show and get high-detail information about it", 
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("start", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "2,4",
-        recurrence_start: "2021-01-02",
-        recurrence_end: "2021-01-31"
+        recurrence_start: "2021-01-02T00:00:00.000Z",
+        recurrence_end: "2021-01-31T00:00:00.000Z"
     }, january1at0am, january31at1159pm, true).then(data => {
         expect(data).toStrictEqual([{
             from: "2021-01-26T09:00:00+00:00",
@@ -783,13 +783,13 @@ test("Calculate a show on 2nd-to-last Wednesday of month and get low-detail info
     let april30at1159pm = dayjs("2021-04-30T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "3,2",
-        recurrence_start: "2021-01-19",
-        recurrence_end: "2021-06-23"
+        recurrence_start: "2021-01-19T00:00:00.000Z",
+        recurrence_end: "2021-06-23T00:00:00.000Z"
     }, april1at0am, april30at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -809,13 +809,13 @@ test("Calculate a show on last Tuesday of month and get low-detail information a
     let may31at1159pm = dayjs("2021-05-31T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "2,1",
-        recurrence_start: "2020-10-19",
-        recurrence_end: "2021-07-29"
+        recurrence_start: "2020-10-19T00:00:00.000Z",
+        recurrence_end: "2021-07-29T00:00:00.000Z"
     }, april1at0am, may31at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -843,13 +843,13 @@ test("Calculate a show on last Sunday of month and get low-detail information ab
     let april30at1159pm = dayjs("2021-04-30T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "0,1",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-10-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-10-23T00:00:00.000Z"
     }, april1at0am, april30at1159pm, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -869,13 +869,13 @@ test("Calculate a show on 6th-to-last Friday of month (doesn't exist) and get lo
     let february14at1159pm = dayjs("2021-02-14T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "5,6",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-03-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-03-23T00:00:00.000Z"
     }, january1at0am, february14at1159pm, false).then(data => {
         expect(data).toStrictEqual([])
     })
@@ -886,13 +886,13 @@ test("Calculate a show on 3rd-to-last Friday of month, starting but not finishin
     let january15at10am = dayjs("2021-01-15T10:00:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "5,3",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january2at8am, january15at10am, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -912,13 +912,13 @@ test("Calculate a show on 3rd-to-last Friday of month, finishing but not startin
     let january15at11am = dayjs("2021-01-15T11:00:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": false,
+        new_show: false,
         recurrence_period: "5,3",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january15at930am, january15at11am, false).then(data => {
         expect(data).toStrictEqual([
             {
@@ -938,13 +938,13 @@ test("Calculate a week-from-end-of-month show which does not occur within the re
     let january6at11am = dayjs("2021-01-06T11:00:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "5,3",
-        recurrence_start: "2020-12-19",
-        recurrence_end: "2021-01-23"
+        recurrence_start: "2020-12-19T00:00:00.000Z",
+        recurrence_end: "2021-01-23T00:00:00.000Z"
     }, january4at930am, january6at11am, false).then(data => {
         expect(data).toStrictEqual([])
     })
@@ -955,13 +955,13 @@ test("Calculate a week-from-end-of-month show and get high-detail information ab
     let january31at1159pm = dayjs("2021-01-31T23:59:00+00:00");
 
     return schedule.scheduleDayOfMonth("end", {
-        id: "99066300793356290",
+        show: "99066300793356290",
         start_time: "9:00",
         duration: 5400,
-        "new_show": true,
+        new_show: true,
         recurrence_period: "2,4",
-        recurrence_start: "2021-01-02",
-        recurrence_end: "2021-01-31"
+        recurrence_start: "2021-01-02T00:00:00.000Z",
+        recurrence_end: "2021-01-31T00:00:00.000Z"
     }, january1at0am, january31at1159pm, true).then(data => {
         expect(data).toStrictEqual([{
             from: "2021-01-05T09:00:00+00:00",
@@ -1029,3 +1029,5 @@ test("Calculate a week-from-end-of-month show and get high-detail information ab
         }])
     })
 });
+
+// TODO Tests for the whole schedule

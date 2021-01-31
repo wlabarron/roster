@@ -25,13 +25,56 @@ function init(dbConnection) {
 }
 
 /**
+ * Returns an array of show information for shows starting or finishing within the request parameters. The format is
+ * the one described at https://github.com/wlabarron/roster/wiki/API:-Schedule.
+ * @param requestStart {String} The start of the request timeframe, in format "YYYY-MM-DD-HH-MM".
+ * @param requestEnd {String} The end of the request timeframe, in format "YYYY-MM-DD-HH-MM".
+ * @param detail {boolean} `true` for all show info to be included, `false` for show IDs and times only.
+ */
+function getShows(requestStart, requestEnd, detail) {
+    let requestStartDayJS = dayjs(requestStart, "YYYY-MM-DD-HH-SS");
+    let requestEndDayJS = dayjs(requestEnd, "YYYY-MM-DD-HH-SS");
+
+    return db.getTimes(requestStartDayJS.format("YYYY-MM-DD"), requestEndDayJS.format("YYYY-MM-DD")).then(data => {
+        let detailPromises = [];
+
+        for (const show of data) {
+            switch (show["recurrence_type"]) {
+                case "once":
+                    detailPromises.push(scheduleOnce(show, requestStartDayJS, requestEndDayJS, detail));
+                    break;
+                case "every":
+                    detailPromises.push(scheduleEvery(show, requestStartDayJS, requestEndDayJS, detail));
+                    break;
+                case "from-start":
+                    detailPromises.push(scheduleDayOfMonth("start", show, requestStartDayJS, requestEndDayJS, detail));
+                    break;
+                case "from-end":
+                    detailPromises.push(scheduleDayOfMonth("end", show, requestStartDayJS, requestEndDayJS, detail));
+                    break;
+            }
+        }
+
+        return settlePromises(detailPromises);
+    }).then(details => {
+        let results = [];
+
+        for (const detail of details) {
+            results = results.concat(detail);
+        }
+
+        return results;
+    });
+}
+
+/**
  * Creates a Day.js object representing the start time of a show on a date.
  * @param {Object} show A show object from the database. Most importantly, needs an item keyed "start_time" with a time in format HH:mm.
  * @param {String} date The date the show starts on, in format YYYY-MM-DD.
  * @returns {dayjs.Dayjs} A Day.js object representing the start time on the given date.
  */
 function calculateStart(show, date) {
-    let start = dayjs(date, "YYYY-MM-DD");
+    let start = dayjs(date);
     let time = show["start_time"].split(":");
     start = start.hour(time[0]).minute(time[1]).millisecond(0);
     return start;
@@ -120,7 +163,7 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
     let showEnd = calculateEnd(show, show["recurrence_end"]);
 
     if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
-        return prepareShowInfo(show.id, show["new_show"], showStart, showEnd, detail)
+        return prepareShowInfo(show.show, show["new_show"], showStart, showEnd, detail)
     } else {
         return new Promise(resolve => {
             resolve(null)
@@ -145,7 +188,7 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
 function scheduleEvery(show, requestStart, requestEnd, detail) {
     // Calculate the start time of the first ever show, the date of the last show, and get the recurrence period as a number
     let showStart = calculateStart(show, show["recurrence_start"]);
-    let recurrenceEnd = dayjs(show["recurrence_end"], "YYYY-MM-DD");
+    let recurrenceEnd = dayjs(show["recurrence_end"]);
     let period = parseInt(show["recurrence_period"])
 
     let showDetailPromises = [];
@@ -158,7 +201,7 @@ function scheduleEvery(show, requestStart, requestEnd, detail) {
         // Check if the show times are within the request period
         if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
             // Add a promise for information about the show to an array.
-            showDetailPromises.push(prepareShowInfo(show.id, show["new_show"], showStart, showEnd, detail));
+            showDetailPromises.push(prepareShowInfo(show.show, show["new_show"], showStart, showEnd, detail));
         }
 
         // Move on to the next potential occurrence
@@ -274,8 +317,8 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
     let dayOfMonth = period[1] - 1; // subtract one since 1st Friday means 0 jumps forward from the 1 first Friday,
                                     // 2nd Friday means 1 jump forward from the first Friday, etc. Same in reverse.
 
-    let recurrenceStart = dayjs(show["recurrence_start"], "YYYY-MM-DD");
-    let recurrenceEnd = dayjs(show["recurrence_end"], "YYYY-MM-DD");
+    let recurrenceStart = dayjs(show["recurrence_start"]);
+    let recurrenceEnd = dayjs(show["recurrence_end"]);
 
     let showDetailPromises = [];
 
@@ -306,7 +349,7 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
                 // Check if the show times are within the request period
                 if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
                     // Add a promise for information about the show to an array.
-                    showDetailPromises.push(prepareShowInfo(show.id, show["new_show"], showStart, showEnd, detail));
+                    showDetailPromises.push(prepareShowInfo(show.show, show["new_show"], showStart, showEnd, detail));
                 }
             }
         }
@@ -325,5 +368,6 @@ module.exports = {
     prepareShowInfo,
     scheduleOnce,
     scheduleEvery,
-    scheduleDayOfMonth
+    scheduleDayOfMonth,
+    getShows
 }

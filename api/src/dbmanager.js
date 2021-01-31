@@ -6,12 +6,11 @@
 'use strict';
 let connection;
 const mysql = require('promise-mysql');
-const common = require("./common");
 require('dotenv').config();
 
 /**
  * Create a database connection based on environment variables or the .env file.
- * @returns {<Connection>} The promise of a database connection.
+ * @returns The promise of a database connection.
  */
 function connect() {
     return mysql.createConnection({
@@ -52,9 +51,27 @@ function getBasicData(type, id) {
 
 }
 
-function query(sql) {
-    return connection.query(sql);
+/**
+ * Returns scheduling information for all shows which MAY start and/or finish between the request start and end dates.
+ * The shows returned may not all occur within the time period, so be sure to check the specifics of any recurrence
+ * rules.
+ * @param requestStart {String} Start of the timeframe to retrieve, in format "YYYY-MM-DD".
+ * @param requestEnd {String} End of the timeframe to retrieve, in format "YYYY-MM-DD".
+ */
+function getTimes(requestStart, requestEnd) {
+    let times = [
+        requestStart, requestEnd,
+        requestStart, requestEnd,
+        requestStart, requestEnd
+    ]
+
+    return query("SELECT * FROM times WHERE recurrence_start BETWEEN ? AND ? OR recurrence_end BETWEEN ? AND ? OR (recurrence_start < ? AND recurrence_end > ?);",
+        times)
 }
 
-module.exports = {connect, init, getBasicData, query};
+function query(sql, values = null) {
+    return connection.query(sql, values);
+}
+
+module.exports = {connect, init, getBasicData, query, getTimes};
 
