@@ -63,6 +63,10 @@ function getShows(requestStart, requestEnd, detail) {
             results = results.concat(detail);
         }
 
+        results.sort((a, b) => {
+            return dayjs(a.from).unix() - dayjs(b.from).unix();
+        });
+
         return results;
     });
 }
