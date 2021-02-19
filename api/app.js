@@ -6,6 +6,7 @@
 
 'use strict';
 const db = require(__dirname + '/src/dbmanager');
+const dayjs = require("dayjs");
 require('dotenv').config();
 
 /**
@@ -51,7 +52,32 @@ function start(connection) {
                     break;
             }
         } else if (req.params["type"] === "schedule") {
-            schedule.getShows(req.query["from"], req.query["to"], req.query["detail"]).then(data => sendJson(data, res))
+            let from, to;
+
+            if (req.query["from"]) {
+                // `from` specified
+                from = req.query["from"];
+
+                // `to` not specified, default to 24hr from now
+                if (!req.query["to"]) {
+                    to = dayjs().add(86400, "seconds").format("YYYY-MM-DD-HH-mm");
+                }
+            } else {
+                // `from` not specified, default to now
+                from = dayjs().format("YYYY-MM-DD-HH-mm");
+
+                // `to` not specified, default to 23:59 today
+                if (!req.query["to"]) {
+                    to = dayjs().hour(23).minute(59).format("YYYY-MM-DD-HH-mm");
+                }
+            }
+
+            // `to` specified
+            if (req.query["to"]) {
+                to = req.query["to"];
+            }
+
+            schedule.getShows(from, to, req.query["detail"]).then(data => sendJson(data, res))
         } else {
             res.status(400);
             res.end()
