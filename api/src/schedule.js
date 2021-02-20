@@ -166,7 +166,7 @@ function scheduleOnce(show, requestStart, requestEnd, detail) {
     let showStart = calculateStart(show, show["recurrence_start"]);
     let showEnd = calculateEnd(show, show["recurrence_end"]);
 
-    if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
+    if (showStart.isBetween(requestStart, requestEnd, null, "[)") || showEnd.isBetween(requestStart, requestEnd, null, "[)")) {
         return prepareShowInfo(show.show, show["new_show"], showStart, showEnd, detail)
     } else {
         return new Promise(resolve => {
@@ -203,7 +203,7 @@ function scheduleEvery(show, requestStart, requestEnd, detail) {
         let showEnd = calculateEnd(show, showStart.format("YYYY-MM-DD"));
 
         // Check if the show times are within the request period
-        if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
+        if (showStart.isBetween(requestStart, requestEnd, null, "[)") || showEnd.isBetween(requestStart, requestEnd, null, "(]")) {
             // Add a promise for information about the show to an array.
             showDetailPromises.push(prepareShowInfo(show.show, show["new_show"], showStart, showEnd, detail));
         }
@@ -351,7 +351,7 @@ function scheduleDayOfMonth(from, show, requestStart, requestEnd, detail) {
                 let showEnd = calculateEnd(show, potentialDate.format("YYYY-MM-DD"))
 
                 // Check if the show times are within the request period
-                if (showStart.isBetween(requestStart, requestEnd, null, "[[") || showEnd.isBetween(requestStart, requestEnd, null, "[[")) {
+                if (showStart.isBetween(requestStart, requestEnd, null, "[)") || showEnd.isBetween(requestStart, requestEnd, null, "(]")) {
                     // Add a promise for information about the show to an array.
                     showDetailPromises.push(prepareShowInfo(show.show, show["new_show"], showStart, showEnd, detail));
                 }
