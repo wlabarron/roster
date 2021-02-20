@@ -58,9 +58,9 @@ function start(connection) {
                 // `from` specified
                 from = req.query["from"];
 
-                // `to` not specified, default to 24hr from now
+                // `to` not specified, default to 24hr from the `from` time
                 if (!req.query["to"]) {
-                    to = dayjs().add(86400, "seconds").format("YYYY-MM-DD-HH-mm");
+                    to = dayjs(req.query["from"], "YYYY-MM-DD-HH-mm").add(86400, "seconds").format("YYYY-MM-DD-HH-mm");
                 }
             } else {
                 // `from` not specified, default to now
@@ -76,7 +76,6 @@ function start(connection) {
             if (req.query["to"]) {
                 to = req.query["to"];
             }
-
             schedule.getShows(from, to, req.query["detail"]).then(data => sendJson(data, res))
         } else {
             res.status(400);
