@@ -107,20 +107,11 @@ function getSponsors(showID) {
 }
 
 /**
- * Get details about a person.
+ * Get details about shows.
  * @param {Array<string>} ids Array of IDs of sponsor you want information about.
  * @returns {PromiseLike<{}> | Promise<{}>} A promise of the information.
  */
 function get(ids) {
-    // If any IDs are invalid, return null
-    for (const id of ids) {
-        if (!common.validateID(id)) {
-            return new Promise(resolve => {
-                resolve(null);
-            });
-        }
-    }
-
     return db.getBasicData("shows", ids).then(rows => {
         const data = {};
         const rowPromises = [];

@@ -6,7 +6,6 @@
 
 'use strict';
 
-const common = require('./common');
 const images = require('./images');
 const urls = require('./urls');
 
@@ -28,15 +27,6 @@ function init(dbConnection) {
  * @returns {PromiseLike<{}> | Promise<{}>} A promise of the information.
  */
 function get(ids) {
-    // If any IDs are invalid, return null
-    for (const id of ids) {
-        if (!common.validateID(id)) {
-            return new Promise(resolve => {
-                resolve(null);
-            });
-        }
-    }
-
     return db.getBasicData("people", ids).then(rows => {
         const data = {};
         const rowPromises = [];

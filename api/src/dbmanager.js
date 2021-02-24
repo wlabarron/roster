@@ -6,6 +6,7 @@
 'use strict';
 let connection;
 const mysql = require('promise-mysql');
+const common = require('./common');
 require('dotenv').config();
 
 /**
@@ -45,8 +46,12 @@ function getBasicData(type, id) {
     // Choose the correct query based on whether we have a specific ID or we want to get everything
     if (idString === "all") {
         return query("SELECT * FROM " + type);
-    } else {
+    } else if (common.validateID(idString)) { // numeric ID provided
         return query("SELECT * FROM " + type + " WHERE id = " + idString);
+    } else { // nickname provided (or nonsense, but hopefully a nickname)
+        // Convert nick to lowercase and remove all non a-z characters
+        idString = idString.toLowerCase().replace(/[^a-z]/g, '');
+        return query("SELECT * FROM " + type + " WHERE nick = ?", [idString]);
     }
 
 }
