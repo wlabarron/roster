@@ -37,11 +37,13 @@ test('Request a URLs related to a sponsor', () => {
         expect(url).toStrictEqual({
             "99075283969114114": {
                 "name": "Facebook",
-                "url": "https://www.facebook.com/speedytaxis"
+                "url": "https://www.facebook.com/speedytaxis",
+                "primary": true
             },
             "99075283969114116": {
                 "name": "Twitter",
-                "url": "https://twitter.com/speedytaxis"
+                "url": "https://twitter.com/speedytaxis",
+                "primary": false
             }
         });
     });

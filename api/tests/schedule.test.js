@@ -132,11 +132,13 @@ test("Get high-detail information about a show occurrence", () => {
                             url: {
                                 '99075283969114114': {
                                     "name": "Facebook",
-                                    "url": "https://www.facebook.com/speedytaxis"
+                                    "url": "https://www.facebook.com/speedytaxis",
+                                    "primary": true
                                 },
                                 '99075283969114116': {
                                     "name": "Twitter",
-                                    "url": "https://twitter.com/speedytaxis"
+                                    "url": "https://twitter.com/speedytaxis",
+                                    "primary": false
                                 }
                             },
                             detail: "Sponsors Song from a Soundtrack"
@@ -234,11 +236,13 @@ test("Calculate a one-off show occurrence and get high-detail information about 
                         url: {
                             '99075283969114114': {
                                 "name": "Facebook",
-                                "url": "https://www.facebook.com/speedytaxis"
+                                "url": "https://www.facebook.com/speedytaxis",
+                                "primary": true
                             },
                             '99075283969114116': {
                                 "name": "Twitter",
-                                "url": "https://twitter.com/speedytaxis"
+                                "url": "https://twitter.com/speedytaxis",
+                                "primary": false
                             }
                         },
                         detail: "Sponsors Song from a Soundtrack"
@@ -495,11 +499,13 @@ test("Calculate a regularly-recurring show and get high-detail information about
                         url: {
                             '99075283969114114': {
                                 "name": "Facebook",
-                                "url": "https://www.facebook.com/speedytaxis"
+                                "url": "https://www.facebook.com/speedytaxis",
+                                "primary": true
                             },
                             '99075283969114116': {
                                 "name": "Twitter",
-                                "url": "https://twitter.com/speedytaxis"
+                                "url": "https://twitter.com/speedytaxis",
+                                "primary": false
                             }
                         },
                         detail: "Sponsors Song from a Soundtrack"
@@ -763,11 +769,13 @@ test("Calculate a week-of-month show and get high-detail information about it", 
                         url: {
                             '99075283969114114': {
                                 "name": "Facebook",
-                                "url": "https://www.facebook.com/speedytaxis"
+                                "url": "https://www.facebook.com/speedytaxis",
+                                "primary": true
                             },
                             '99075283969114116': {
                                 "name": "Twitter",
-                                "url": "https://twitter.com/speedytaxis"
+                                "url": "https://twitter.com/speedytaxis",
+                                "primary": false
                             }
                         },
                         detail: "Sponsors Song from a Soundtrack"
@@ -1015,11 +1023,13 @@ test("Calculate a week-from-end-of-month show and get high-detail information ab
                         url: {
                             '99075283969114114': {
                                 "name": "Facebook",
-                                "url": "https://www.facebook.com/speedytaxis"
+                                "url": "https://www.facebook.com/speedytaxis",
+                                "primary": true
                             },
                             '99075283969114116': {
                                 "name": "Twitter",
-                                "url": "https://twitter.com/speedytaxis"
+                                "url": "https://twitter.com/speedytaxis",
+                                "primary": false
                             }
                         },
                         detail: "Sponsors Song from a Soundtrack"

@@ -30,7 +30,7 @@ function get(relatedType, relatedID) {
 
     if (common.validateID(relatedID) &&
         validRelatedTypes.includes(relatedType)) {
-        return db.query("SELECT DISTINCT u.* FROM urls, rel_urls LEFT JOIN urls u on rel_urls.url = u.id WHERE rel_urls." + relatedType + " = " + relatedID + ";")
+        return db.query("SELECT DISTINCT u.*, rel_urls.`primary` FROM urls, rel_urls LEFT JOIN urls u on rel_urls.url = u.id WHERE rel_urls." + relatedType + " = " + relatedID + ";")
             .then(rows => {
                 // no related images
                 if (rows.length === 0) {
@@ -43,7 +43,13 @@ function get(relatedType, relatedID) {
                 for (const row of rows) {
                     response[row.id] = {
                         "name": row.name,
-                        "url": row.url
+                        "url": row.url,
+                        // IDEs may suggest this ternary statement can be removed, since `row.primary` is a
+                        // boolean already. Don't listen to the IDEs.
+                        // row.primary is a boolean, but it's `0` or `1`. The API should return `true` or `false`,
+                        // and this ternary statement is a neat way to convert the truthy and falsey `0` and `1` to
+                        // actual booleans.
+                        "primary": row.primary ? true : false
                     }
                 }
 

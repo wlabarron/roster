@@ -76,7 +76,8 @@ test('Get details about two people using their IDs', () => {
                     url: {
                         '99076705234190336': {
                             "name": "BBC",
-                            "url": "https://www.bbc.co.uk"
+                            "url": "https://www.bbc.co.uk",
+                            "primary": true
                         }
                     }
                 }
@@ -113,7 +114,8 @@ test('Get details about everybody', () => {
                     url: {
                         '99076705234190336': {
                             "name": "BBC",
-                            "url": "https://www.bbc.co.uk"
+                            "url": "https://www.bbc.co.uk",
+                            "primary": true
                         }
                     }
                 }

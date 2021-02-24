@@ -75,11 +75,13 @@ test('Get details about a show using its ID', () => {
                         url: {
                             '99075283969114114': {
                                 "name": "Facebook",
-                                "url": "https://www.facebook.com/speedytaxis"
+                                "url": "https://www.facebook.com/speedytaxis",
+                                "primary": true
                             },
                             '99075283969114116': {
                                 "name": "Twitter",
-                                "url": "https://twitter.com/speedytaxis"
+                                "url": "https://twitter.com/speedytaxis",
+                                "primary": false
                             }
                         },
                         detail: "Sponsors Song from a Soundtrack"
@@ -140,11 +142,13 @@ test('Get details about two show using their IDs', () => {
                             url: {
                                 '99075283969114114': {
                                     "name": "Facebook",
-                                    "url": "https://www.facebook.com/speedytaxis"
+                                    "url": "https://www.facebook.com/speedytaxis",
+                                    "primary": true
                                 },
                                 '99075283969114116': {
                                     "name": "Twitter",
-                                    "url": "https://twitter.com/speedytaxis"
+                                    "url": "https://twitter.com/speedytaxis",
+                                    "primary": false
                                 }
                             },
                             detail: "Sponsors Song from a Soundtrack"
@@ -171,7 +175,8 @@ test('Get details about two show using their IDs', () => {
                             url: {
                                 '99076705234190336': {
                                     "name": "BBC",
-                                    "url": "https://www.bbc.co.uk"
+                                    "url": "https://www.bbc.co.uk",
+                                    "primary": true
                                 }
                             },
                             role: "Presenter"
@@ -250,11 +255,13 @@ test('Get details about all shows', () => {
                         url: {
                             '99075283969114114': {
                                 "name": "Facebook",
-                                "url": "https://www.facebook.com/speedytaxis"
+                                "url": "https://www.facebook.com/speedytaxis",
+                                "primary": true
                             },
                             '99075283969114116': {
                                 "name": "Twitter",
-                                "url": "https://twitter.com/speedytaxis"
+                                "url": "https://twitter.com/speedytaxis",
+                                "primary": false
                             }
                         },
                         detail: "Sponsors Song from a Soundtrack"
@@ -281,7 +288,8 @@ test('Get details about all shows', () => {
                         url: {
                             '99076705234190336': {
                                 "name": "BBC",
-                                "url": "https://www.bbc.co.uk"
+                                "url": "https://www.bbc.co.uk",
+                                "primary": true
                             }
                         },
                         role: "Presenter"
