@@ -107,12 +107,13 @@ create table urls
 
 create table rel_urls
 (
-    id      bigint unsigned default uuid_short() not null
+    id        bigint unsigned default uuid_short() not null
         primary key,
-    url     bigint unsigned                      not null,
-    `show`  bigint unsigned                      null,
-    sponsor bigint unsigned                      null,
-    people  bigint unsigned                      null,
+    url       bigint unsigned                      not null,
+    `show`    bigint unsigned                      null,
+    sponsor   bigint unsigned                      null,
+    people    bigint unsigned                      null,
+    `primary` tinyint(1)      default 0            not null,
     constraint rel_urls_people
         foreign key (people) references people (id),
     constraint rel_urls_shows
