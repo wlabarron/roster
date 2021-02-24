@@ -38,22 +38,25 @@ function init(conn) {
  * @param id {Array<string>} An array of IDs to retrieve information about.
  */
 function getBasicData(type, id) {
-    // Format multiple IDs for SQL
-    let idString = id.reduce((out, next) => {
-        return out + " OR id = " + next;
-    })
-
-    // Choose the correct query based on whether we have a specific ID or we want to get everything
-    if (idString === "all") {
+    if (id[0] === "all") { // requesting all info
         return query("SELECT * FROM " + type);
-    } else if (common.validateID(idString)) { // numeric ID provided
-        return query("SELECT * FROM " + type + " WHERE id = " + idString);
-    } else { // nickname provided (or nonsense, but hopefully a nickname)
-        // Convert nick to lowercase and remove all non a-z characters
-        idString = idString.toLowerCase().replace(/[^a-z]/g, '');
-        return query("SELECT * FROM " + type + " WHERE nick = ?", [idString]);
     }
 
+    // Format multiple IDs for SQL
+    let idString = id.reduce((out, next) => {
+        if (common.validateID(next)) {// numeric ID provided
+            return out + " OR id = " + next;
+        } else { // nickname provided (or nonsense, but hopefully a nickname)
+            // Crush nickname to lowercase and strip all characters except a-z.
+            next = next.toLowerCase().replace(/[^a-z]/g, '');
+            return out + " OR nick = '" + next + "'";
+        }
+    }, "");
+
+    // Remove the " OR " from the start of the constructed string
+    idString = idString.slice(4);
+
+    return query("SELECT * FROM " + type + " WHERE " + idString);
 }
 
 /**
