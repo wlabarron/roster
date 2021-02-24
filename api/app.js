@@ -78,9 +78,9 @@ function start(connection) {
                 // `from` not specified, default to now
                 from = dayjs().format("YYYY-MM-DD-HH-mm");
 
-                // `to` not specified, default to 23:59 today
+                // `to` not specified, default to 00:00 tomorrow (23:59 today + 1 minute)
                 if (!req.query["to"]) {
-                    to = dayjs().hour(23).minute(59).format("YYYY-MM-DD-HH-mm");
+                    to = dayjs().endOf('day').add(1, "minute").format("YYYY-MM-DD-HH-mm");
                 }
             }
 

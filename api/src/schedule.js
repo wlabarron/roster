@@ -32,8 +32,8 @@ function init(dbConnection) {
  * @param detail {boolean} `true` for all show info to be included, `false` for show IDs and times only.
  */
 function getShows(requestStart, requestEnd, detail) {
-    let requestStartDayJS = dayjs(requestStart, "YYYY-MM-DD-HH-SS");
-    let requestEndDayJS = dayjs(requestEnd, "YYYY-MM-DD-HH-SS");
+    let requestStartDayJS = dayjs(requestStart, "YYYY-MM-DD-HH-mm");
+    let requestEndDayJS = dayjs(requestEnd, "YYYY-MM-DD-HH-mm");
 
     return db.getTimes(requestStartDayJS.format("YYYY-MM-DD"), requestEndDayJS.format("YYYY-MM-DD")).then(data => {
         let detailPromises = [];
