@@ -39,16 +39,28 @@ function start(connection) {
 
             switch (req.params["type"]) {
                 case "sponsors":
-                    sponsors.get(req.query["id"]).then(data => sendJson(data, res))
+                    sponsors.get(req.query["id"]).then(data => {
+                        res.set("Cache-Control", "public, max-age=3600"); // cache response for an hour
+                        sendJson(data, res);
+                    });
                     break;
                 case "people":
-                    people.get(req.query["id"]).then(data => sendJson(data, res))
+                    people.get(req.query["id"]).then(data => {
+                        res.set("Cache-Control", "public, max-age=3600"); // cache response for an hour
+                        sendJson(data, res);
+                    });
                     break;
                 case "shows":
-                    shows.get(req.query["id"]).then(data => sendJson(data, res))
+                    shows.get(req.query["id"]).then(data => {
+                        res.set("Cache-Control", "public, max-age=3600"); // cache response for an hour
+                        sendJson(data, res);
+                    });
                     break;
                 case "images":
-                    images.get(req.query["id"]).then(data => sendJson(data, res))
+                    images.get(req.query["id"]).then(data => {
+                        res.set("Cache-Control", "public, max-age=3600"); // cache response for an hour
+                        sendJson(data, res);
+                    });
                     break;
             }
         } else if (req.params["type"] === "schedule") {
@@ -76,7 +88,28 @@ function start(connection) {
             if (req.query["to"]) {
                 to = req.query["to"];
             }
-            schedule.getShows(from, to, req.query["detail"]).then(data => sendJson(data, res))
+            schedule.getShows(from, to, req.query["detail"]).then(data => {
+                if (data) {
+                    let from = dayjs(Object.values(data)[0].from);
+                    let to = dayjs(Object.values(data)[0].to);
+                    let now = dayjs();
+                    let diff;
+
+                    // Calculate how many seconds away the next schedule event is
+                    if (from.isAfter(now)) { // The show has started
+                        diff = from.diff(now, "s");
+                    } else { // The show has not yet started
+                        diff = to.diff(now, "s");
+                    }
+
+                    if (diff > 3600) {// The next schedule event is more than 1 hour away
+                        res.set("Cache-Control", "public, max-age=3600"); // cache response for 1 hour
+                    } else {
+                        res.set("Cache-Control", "public, max-age=" + diff); // cache response until schedule changes
+                    }
+                }
+                sendJson(data, res);
+            });
         } else {
             res.status(400);
             res.end()
