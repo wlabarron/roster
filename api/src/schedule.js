@@ -30,12 +30,14 @@ function init(dbConnection) {
  * @param requestStart {String} The start of the request timeframe, in format "YYYY-MM-DD-HH-MM".
  * @param requestEnd {String} The end of the request timeframe, in format "YYYY-MM-DD-HH-MM".
  * @param detail {boolean} `true` for all show info to be included, `false` for show IDs and times only.
+ * @param id {String[]} Array of show IDs or nicknames, or null. If provided, only details about shows listed in this
+ *                      array will be returned.
  */
-function getShows(requestStart, requestEnd, detail) {
+function getShows(requestStart, requestEnd, detail, id = null) {
     let requestStartDayJS = dayjs(requestStart, "YYYY-MM-DD-HH-mm");
     let requestEndDayJS = dayjs(requestEnd, "YYYY-MM-DD-HH-mm");
 
-    return db.getTimes(requestStartDayJS.format("YYYY-MM-DD"), requestEndDayJS.format("YYYY-MM-DD")).then(data => {
+    return db.getTimes(requestStartDayJS.format("YYYY-MM-DD"), requestEndDayJS.format("YYYY-MM-DD"), id).then(data => {
         let detailPromises = [];
 
         for (const show of data) {
